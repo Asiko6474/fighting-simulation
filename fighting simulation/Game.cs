@@ -37,12 +37,22 @@ namespace fighting_simulation
             monster3.attack = 10;
             monster3.defense = 10;
 
+            void PrintStats(Monster monster)
+            {
+                Console.WriteLine("name:" + monster.name);
+                Console.WriteLine("health " + monster.health);
+                Console.WriteLine("defense " + monster.defense);
+                Console.WriteLine("attack " + monster.attack);
+            }
+
+
+
             //monster 1 stats
             PrintStats(monster1);
             //monster 2 stats
             PrintStats(monster2);
             //monster 1 attacks monster 2
-            float damageTaken = CalculateDamage(monster1.attack, monster2.defense);
+            float damageTaken = Fight(monster1, monster2);
             monster2.health = monster2.health -= damageTaken;
             Console.WriteLine(monster2.name + " has taken " + damageTaken + "damage");
             Console.ReadLine();
@@ -50,19 +60,11 @@ namespace fighting_simulation
 
             //monster 2 attacks monster 2
 
-            damageTaken = CalculateDamage(monster2.attack, monster1.defense);
+            damageTaken = Fight(monster2, monster1);
             monster1.health = monster1.health -= damageTaken;
             Console.WriteLine(monster1.name + " has taken " + damageTaken + " damage");
             Console.ReadLine();
             Console.Clear();
-
-            void PrintStats()
-            {
-                Console.WriteLine("name: " + name);
-                Console.WriteLine("health " + health);
-                Console.WriteLine("defense " + defense);
-                Console.WriteLine("attack " + attack);
-            }
 
             float CalculateDamage(float attack, float defense)
             {
@@ -72,6 +74,19 @@ namespace fighting_simulation
                     damage = 0;
                 }
                 return damage;
+            }
+
+            float Calculatedamage(Monster attacker, Monster defender)
+            {
+                return attacker.attack - defender.defense;
+            }
+            void Fight(Monster attacker, Monster defender)
+            { 
+                float damageTaken = CalculateDamage(Monster attacker, Monster defender);
+                defender.health = defender.health -= attacker.attack;
+                Console.WriteLine(defender.name + " has taken " + damageTaken + "damage");
+                Console.ReadLine();
+                Console.Clear();
             }
         }
     }
