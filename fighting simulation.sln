@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fighting simulation", "fighting simulation\fighting simulation.csproj", "{ECEEF7C6-8C81-4905-A501-856F95742CF9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ECEEF7C6-8C81-4905-A501-856F95742CF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECEEF7C6-8C81-4905-A501-856F95742CF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECEEF7C6-8C81-4905-A501-856F95742CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECEEF7C6-8C81-4905-A501-856F95742CF9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {25B5B200-72F9-432F-AA9C-A5EF2A250FF5}
+	EndGlobalSection
+EndGlobal
