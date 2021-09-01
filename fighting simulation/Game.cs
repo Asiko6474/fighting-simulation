@@ -9,85 +9,128 @@ namespace fighting_simulation
        public string name;
        public float health;
        public float attack;
-        public float defense;
+       public float defense;
     }
+
     class Game
     {
-
+        bool gameOver = false;
+        Monster currentMonster1;
+        Monster currentMonster2;
+        int currentMonsterIndex = 1;
         public void Run()
         {
-            //monster 1, the orc
-            Monster monster1;
-            monster1.name = "Wompus";
-            monster1.attack = 10;
-            monster1.defense = 5;
-            monster1.health = 20;
+            //monster 1
+            Monster Wompus;
+            Wompus.name = "Wompus";
+            Wompus.attack = 10.0f;
+            Wompus.defense = 5.0f;
+            Wompus.health = 20.0f;
 
-            //monster 2, the goblin
-            Monster monster2;
-            monster2.name = "Mike";
-            monster2.health = 10;
-            monster2.attack = 10;
-            monster2.defense = 10;
+            //monster 2
+            Monster Mike;
+            Mike.name = "Mike";
+            Mike.health = 10.0f;
+            Mike.attack = 10.0f;
+            Mike.defense = 10.0f;
 
-            //mosnter 3
-            Monster monster3;
-            monster3.name = "Kiki";
-            monster3.health = 10;
-            monster3.attack = 10;
-            monster3.defense = 10;
+            //monster 3
+            Monster Kiki;
+            Kiki.name = "Kiki";
+            Kiki.health = 10.0f;
+            Kiki.attack = 10.0f;
+            Kiki.defense = 10.0f;
 
-            void PrintStats(Monster monster)
+            //monster 4
+            Monster Cory;
+            Cory.name = "Cory";
+            Cory.health = 1.0f;
+            Cory.attack = 1.0f;
+            Cory.defense = 1.0f;
+
+            void Update()
             {
-                Console.WriteLine("name:" + monster.name);
-                Console.WriteLine("health " + monster.health);
-                Console.WriteLine("defense " + monster.defense);
-                Console.WriteLine("attack " + monster.attack);
+                Battle();
             }
-
-
-
-            //monster 1 stats
-            PrintStats(monster1);
-            //monster 2 stats
-            PrintStats(monster2);
-            //monster 1 attacks monster 2
-            float damageTaken = Fight(monster1, monster2);
-            monster2.health = monster2.health -= damageTaken;
-            Console.WriteLine(monster2.name + " has taken " + damageTaken + "damage");
-            Console.ReadLine();
-            Console.Clear();
-
-            //monster 2 attacks monster 2
-
-            damageTaken = Fight(monster2, monster1);
-            monster1.health = monster1.health -= damageTaken;
-            Console.WriteLine(monster1.name + " has taken " + damageTaken + " damage");
-            Console.ReadLine();
-            Console.Clear();
-
-            float CalculateDamage(float attack, float defense)
+            Monster monster;
+            monster.name = "None";
+            monster.attack = 1;
+            monster.defense = 1;
+            monster.health = 1;
+            Monster GetMonster(int monsterIndex)
             {
-                float damage = attack - defense;
-                if (damage <=0)
+                if (monsterIndex == 1)
                 {
-                    damage = 0;
+                    monster = Cory;
                 }
-                return damage;
+                else if (monsterIndex == 2)
+                {
+                    monster = Kiki;
+                }
+                else if (monsterIndex == 3)
+                {
+                    monster = Wompus;
+                }
+                else if (monsterIndex ==4)
+                {
+                    monster = Mike;
+                }
+                return monster;
             }
 
-            float Calculatedamage(Monster attacker, Monster defender)
+            void Battle()
             {
-                return attacker.attack - defender.defense;
+                //Print monster1 stats
+                PrintStats(currentMonster1);
+                //Print monster2 stats
+                PrintStats(currentMonster2);
+
+                //Monster 1 attacks monster 2
+                float damageTaken = Fight(currentMonster1, ref currentMonster2);
+                Console.WriteLine(currentMonster2.name + " has taken " + damageTaken + " damage");
+
+                //Monster 2 attacks monster 1
+
+                damageTaken = Fight(currentMonster2, ref currentMonster1);
+                Console.WriteLine(currentMonster1.name + " has taken " + damageTaken + " damage");
             }
-            void Fight(Monster attacker, Monster defender)
-            { 
-                float damageTaken = CalculateDamage(Monster attacker, Monster defender);
-                defender.health = defender.health -= attacker.attack;
-                Console.WriteLine(defender.name + " has taken " + damageTaken + "damage");
-                Console.ReadLine();
-                Console.Clear();
+
+            void UpdateCurrentMonster()
+            {
+                if 
             }
+        }
+
+        float Fight( Monster attacker, Monster defender)
+        {
+            float damageTaken = CalculateDamage(attacker, defender);
+            defender.health -= damageTaken;
+            return damageTaken;
+        }
+
+        void PrintStats(Monster monster)
+        {
+            Console.WriteLine("Name: " + monster.name);
+            Console.WriteLine("Health: " + monster.health);
+            Console.WriteLine("Attack: " + monster.attack);
+            Console.WriteLine("Defense: " + monster.defense);
+        }
+
+        float CalculateDamage(float attack, float defense)
+        {
+            float damage = attack - defense;
+
+            if (damage <= 0)
+            {
+                damage = 0;
+            }
+
+            return damage;
+        }
+
+        float CalculateDamage(Monster attacker, Monster defender)
+        {
+            return attacker.attack - defender.defense;
         }
     }
 }
