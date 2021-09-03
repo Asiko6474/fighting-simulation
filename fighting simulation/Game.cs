@@ -14,49 +14,81 @@ namespace fighting_simulation
 
     class Game
     {
+        //The names of the monsters will be stored here
+        Monster Wompus;
+        Monster Mike;
+        Monster Kiki;
+        Monster Cory;
+
+
         bool gameOver = false;
         Monster currentMonster1;
         Monster currentMonster2;
         int currentMonsterIndex = 1;
+
+
         public void Run()
         {
-            //monster 1
-            Monster Wompus;
-            Wompus.name = "Wompus";
-            Wompus.attack = 10.0f;
-            Wompus.defense = 5.0f;
-            Wompus.health = 20.0f;
+            Start();
 
-            //monster 2
-            Monster Mike;
-            Mike.name = "Mike";
-            Mike.health = 10.0f;
-            Mike.attack = 10.0f;
-            Mike.defense = 10.0f;
 
-            //monster 3
-            Monster Kiki;
-            Kiki.name = "Kiki";
-            Kiki.health = 10.0f;
-            Kiki.attack = 10.0f;
-            Kiki.defense = 10.0f;
 
-            //monster 4
-            Monster Cory;
-            Cory.name = "Cory";
-            Cory.health = 1.0f;
-            Cory.attack = 1.0f;
-            Cory.defense = 1.0f;
+            while (!gameOver)
+            {
+                Update();
+            }
+        
+            void Start()
+            {
+                //monster 1
+
+                Wompus.name = "Wompus";
+                Wompus.attack = 10.0f;
+                Wompus.defense = 5.0f;
+                Wompus.health = 20.0f;
+
+                //monster 2
+
+                Mike.name = "Mike";
+                Mike.health = 10.0f;
+                Mike.attack = 10.0f;
+                Mike.defense = 10.0f;
+
+                //monster 3
+
+                Kiki.name = "Kiki";
+                Kiki.health = 10.0f;
+                Kiki.attack = 10.0f;
+                Kiki.defense = 10.0f;
+
+                //monster 4
+
+                Cory.name = "Cory";
+                Cory.health = 1.0f;
+                Cory.attack = 20.0f;
+                Cory.defense = 1.0f;
+
+                //starting fighters set
+                currentMonster1 = GetMonster(currentMonsterIndex);
+                currentMonsterIndex++;
+                currentMonster2 = GetMonster(currentMonsterIndex);
+                currentMonsterIndex++;
+            }
 
             void Update()
             {
                 Battle();
+                UpdateCurrentMonster();
+                Console.ReadKey(true);
+                Console.Clear();
             }
+
             Monster monster;
             monster.name = "None";
             monster.attack = 1;
             monster.defense = 1;
             monster.health = 1;
+
             Monster GetMonster(int monsterIndex)
             {
                 if (monsterIndex == 1)
@@ -78,6 +110,10 @@ namespace fighting_simulation
                 return monster;
             }
 
+
+            /// <summary>
+            /// Simulates one turn in the fight
+            /// </summary>
             void Battle()
             {
                 //Print monster1 stats
@@ -86,7 +122,7 @@ namespace fighting_simulation
                 PrintStats(currentMonster2);
 
                 //Monster 1 attacks monster 2
-                float damageTaken = Fight(currentMonster1, ref currentMonster2);
+                float damageTaken = Fight( currentMonster1, ref currentMonster2);
                 Console.WriteLine(currentMonster2.name + " has taken " + damageTaken + " damage");
 
                 //Monster 2 attacks monster 1
@@ -94,16 +130,39 @@ namespace fighting_simulation
                 damageTaken = Fight(currentMonster2, ref currentMonster1);
                 Console.WriteLine(currentMonster1.name + " has taken " + damageTaken + " damage");
             }
-
+            /// <summary>
+            /// Changes the fighters when health goes to 0
+            /// or ends the simulation
+            /// </summary>
             void UpdateCurrentMonster()
             {
-                if 
+                //Monster 1 dying
+               if (currentMonster1.health <= 0)
+                {
+                    //Monster swapping
+                    currentMonsterIndex++;
+                    currentMonster1 = GetMonster(currentMonsterIndex);
+                }
+               //Monster 2 dying
+               if (currentMonster2.health <= 0)
+                {
+                    //Monster swapping but for monster 2 specifically
+                    currentMonsterIndex++;
+                    currentMonster2 = GetMonster(currentMonsterIndex);
+                }
+               //When there is no more monsters to fight
+               if (currentMonster2.name == "None" || currentMonster2.name == "None" && currentMonsterIndex >= 4)
+                {
+                    // the simulation ends here.
+                    Console.WriteLine("Simulation Over");
+                    gameOver = true;
+                }
             }
         }
 
-        float Fight( Monster attacker, Monster defender)
+        float Fight(Monster attacker, ref Monster defender)
         {
-            float damageTaken = CalculateDamage(attacker, defender);
+            float damageTaken = CalculateDamage(ref attacker, ref defender);
             defender.health -= damageTaken;
             return damageTaken;
         }
@@ -128,7 +187,7 @@ namespace fighting_simulation
             return damage;
         }
 
-        float CalculateDamage(Monster attacker, Monster defender)
+         float CalculateDamage(ref Monster attacker, ref Monster defender)
         {
             return attacker.attack - defender.defense;
         }
