@@ -24,24 +24,33 @@ namespace fighting_simulation
         bool gameOver = false;
         Monster currentMonster1;
         Monster currentMonster2;
-        int currentMonsterIndex = 1;
-
+        int currentMonsterIndex = 0;
+        int currentScene = 0;
 
         public void Run()
         {
+            PrintNumbers();
             Start();
 
             while (!gameOver)
             {
                 Update();
             }
+
+            End();
+        }
+
+        void PrintNumbers()
+        {
+            int[] numbers = new int[5] { 0, 1, 2, 3, 4 };
+            Console.WriteLine(String.Join(",", numbers));
         }
         void Start()
         {
             //monster 1
 
             Wompus.name = "Wompus";
-            Wompus.attack = 10.0f;
+            Wompus.attack = 15.0f;
             Wompus.defense = 5.0f;
             Wompus.health = 20.0f;
 
@@ -63,22 +72,146 @@ namespace fighting_simulation
 
             Cory.name = "Cory";
             Cory.health = 50.0f;
-            Cory.attack = 20.0f;
+            Cory.attack = 25.0f;
             Cory.defense = 1.0f;
 
+            ResetCurrentMonsters();
+            
+        }
+
+
+        void ResetCurrentMonsters()
+        {
+            currentMonsterIndex = 0;
             //starting fighters set
             currentMonster1 = GetMonster(currentMonsterIndex);
             currentMonsterIndex++;
             currentMonster2 = GetMonster(currentMonsterIndex);
-            
         }
 
+
+        void UpdateCurrentScene()
+        {
+            if (currentScene == 0)
+            {
+                DisplayStartMenu();
+            }
+            else if (currentScene == 1)
+            {
+                Battle();
+                UpdateCurrentMonster();
+                Console.ReadKey(true);
+            }
+            else if (currentScene == 2)
+            {
+                DisplayRestartMenu();
+            }
+        }
+
+
+        /// <summary>
+        /// Gets an input from the player based on some decision
+        /// </summary>
+        /// <param name="description">Context for decision</param>
+        /// <param name="option1">The first choice</param>
+        /// <param name="option2">The second choice</param>
+        /// <param name="pauseInvalid">If true, the player must press a key to continue after putting in the incorrect choice</param>
+        /// <returns>A number representing which of the two options was chosen. Returns 0 if an invalid input was received.</returns>
+        int GetInput(string description, string option1, string option2, bool pauseInvalid = false)
+        {
+            //Print the context and options
+            Console.WriteLine(description);
+            Console.WriteLine("1. " + option1);
+            Console.WriteLine("2. " + option2);
+
+            //Get player input
+            string input = Console.ReadLine();
+            int choice = 0;
+
+            //If the player typed 1
+            if (input == "1")
+            {
+                choice = 1;
+            }
+            //if the player typed 2
+            else if (input == "2")
+            {
+                choice = 2;
+            }
+            //If the player did not type 1 or 2
+            else
+            {
+                //...show them they typed the wrong key
+                Console.WriteLine("Invalid Input");
+
+                //If we want to pause when an invalid input is recieved...
+                if (pauseInvalid)
+                {
+                    //...make the player press a key to continue
+                    Console.ReadKey(true);
+                }
+            }
+
+            //Return the player choice
+            return choice;
+
+        }
+        /// <summary>
+        /// Displays the starting menu, giving the player the option to start the simulation or not
+        /// </summary>
+        void DisplayStartMenu()
+        {
+            //the opening message with the player choices
+            int choice = GetInput("Welcome to the simulation!", "Start Simulation", "Quit Application");
+            
+            //choice to start the simulation
+            if (choice == 1)
+            {
+                currentScene = 1;
+            }
+            //choice to not start the simulation and exit
+            else if (choice == 2)
+            {
+                gameOver = true;
+            }
+        }
+
+
+        /// <summary>
+        /// Displays the restart menu. Gives the player the option to restart or exit the program
+        /// </summary>
+        void DisplayRestartMenu()
+        {
+            //Get the player choice
+            int choice = GetInput("Simulation over. Would you like to start again?", "Yes", "No");
+
+            //If the player chose to restart...
+            if (choice == 1)
+            {
+                //...set the current scene to be the starting scene
+                ResetCurrentMonsters();
+                currentScene = 0;
+            }
+            //if the player wants to exit
+            else if (choice == 2)
+            {
+                //...set the game to end
+                gameOver = true;
+            }
+        }
+
+        /// <summary>
+        /// Called every game loop
+        /// </summary>
         void Update()
         {
-            Battle();
-            UpdateCurrentMonster();
-            Console.ReadKey(true);
+            UpdateCurrentScene();
             Console.Clear();
+        }
+
+        void End()
+        {
+            Console.WriteLine("This is the end. Goodbye.");
         }
 
         /// <summary>
@@ -94,19 +227,19 @@ namespace fighting_simulation
             monster.defense = 1;
             monster.health = 1;
 
-            if (monsterIndex == 1)
+            if (monsterIndex == 0)
             {
                 monster = Cory;
             }
-            else if (monsterIndex == 2)
+            else if (monsterIndex == 1)
             {
                 monster = Kiki;
             }
-            else if (monsterIndex == 3)
+            else if (monsterIndex == 2)
             {
                 monster = Wompus;
             }
-            else if (monsterIndex == 4)
+            else if (monsterIndex == 3)
             {
                 monster = Mike;
             }
@@ -140,6 +273,7 @@ namespace fighting_simulation
         /// </summary>
         void UpdateCurrentMonster()
         {
+
             //Monster 1 dying
             if (currentMonster1.health <= 0)
             {
@@ -157,53 +291,53 @@ namespace fighting_simulation
             //When there is no more monsters to fight
             if (currentMonster2.name == "None" || currentMonster2.name == "None" && currentMonsterIndex >= 4)
             {
-                // the simulation ends here.
-                Console.WriteLine("Simulation Over");
-                gameOver = true;
+                // Shows restart menu
+                
+                currentScene = 2;
             }
         }
 
         /// <summary>
         /// Starts the battle!!!!
         /// </summary>
-        /// <param name="monster1"></param>
-        /// <param name="monster2"></param>
+        /// <param name="Cory"></param>
+        /// <param name="Kiki"></param>
         /// <returns></returns>
-        string StartBattle(ref Monster monster1, ref Monster monster2)
+        string StartBattle(ref Monster Cory, ref Monster Kiki)
         {
             string matchResult = "No Contest";
 
-            while (monster1.health > 0 && monster2.health > 0)
+            while (Cory.health > 0 && Kiki.health > 0)
             {
                 //Print monster1 stats
-                PrintStats(monster1);
+                PrintStats(Cory);
                 //Print monster2 stats
-                PrintStats(monster2);
+                PrintStats(Kiki);
 
                 //Monster 1 attacks monster 2
-                float damageTaken = Fight(monster1, ref monster2);
-                Console.WriteLine(monster2.name + " has taken " + damageTaken);
+                float damageTaken = Fight(Cory, ref Kiki);
+                Console.WriteLine(Kiki.name + " has taken " + damageTaken);
 
                 //Monster 2 attacks monster 1
 
-                damageTaken = Fight(monster2, ref monster1);
-                Console.WriteLine(monster1.name + " has taken " + damageTaken);
+                damageTaken = Fight(Kiki, ref Cory);
+                Console.WriteLine(Cory.name + " has taken " + damageTaken);
 
                 Console.ReadKey(true);
                 Console.Clear();
             }
 
-            if (monster1.health <= 0 && monster2.health <= 0)
+            if (Cory.health <= 0 && Kiki.health <= 0)
             {
                 matchResult = "Draw";
             }
-            else if (monster1.health > 0)
+            else if (Cory.health > 0)
             {
-                matchResult = monster1.name;
+                matchResult = Cory.name;
             }
-            else if (monster2.health > 0)
+            else if (Kiki.health > 0)
             {
-                matchResult = monster2.name;
+                matchResult = Kiki.name;
             }
 
             return matchResult;
@@ -242,5 +376,3 @@ namespace fighting_simulation
         }
     }
 }
-
-
