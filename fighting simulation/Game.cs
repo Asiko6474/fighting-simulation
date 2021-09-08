@@ -29,6 +29,7 @@ namespace fighting_simulation
 
         public void Run()
         {
+            UserArray();
             PrintNumbers();
             Start();
 
@@ -40,8 +41,36 @@ namespace fighting_simulation
             End();
         }
 
+        void PrintArray(int[] numArray, int size)
+        {
+            for (int i = 0; i < size; i++)
+            {
+                Console.WriteLine(numArray[i]);
+            }
+        }
+
+
+            void UserArray()
+            {
+            Console.WriteLine("please input 5 numbers");
+            string[] input = new string[5];
+            for (int i = 0; i < input.Length; i++)
+            {
+                input[i] = Console.ReadLine();
+            }
+            }
+
+    void PrintArray(int[] arr)
+        {
+            for (int i = 0; i <arr.Length; i++)
+            {
+                Console.WriteLine(arr[i]);
+            }
+        }
+
         void PrintNumbers()
         {
+            Console.WriteLine("Cool now here is some 5 random numbers");
             int[] numbers = new int[5] { 0, 1, 2, 3, 4 };
             Console.WriteLine(String.Join(",", numbers));
         }
