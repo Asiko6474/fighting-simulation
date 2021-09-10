@@ -19,18 +19,18 @@ namespace fighting_simulation
         Monster Mike;
         Monster Kiki;
         Monster Cory;
+        Monster[] monsters;
 
-
+        
         bool gameOver = false;
         Monster currentMonster1;
         Monster currentMonster2;
         int currentMonsterIndex = 0;
         int currentScene = 0;
+        
 
         public void Run()
         {
-            UserArray();
-            PrintNumbers();
             Start();
 
             while (!gameOver)
@@ -41,39 +41,8 @@ namespace fighting_simulation
             End();
         }
 
-        void PrintArray(int[] numArray, int size)
-        {
-            for (int i = 0; i < size; i++)
-            {
-                Console.WriteLine(numArray[i]);
-            }
-        }
 
 
-            void UserArray()
-            {
-            Console.WriteLine("please input 5 numbers");
-            string[] input = new string[5];
-            for (int i = 0; i < input.Length; i++)
-            {
-                input[i] = Console.ReadLine();
-            }
-            }
-
-    void PrintArray(int[] arr)
-        {
-            for (int i = 0; i <arr.Length; i++)
-            {
-                Console.WriteLine(arr[i]);
-            }
-        }
-
-        void PrintNumbers()
-        {
-            Console.WriteLine("Cool now here is some 5 random numbers");
-            int[] numbers = new int[5] { 0, 1, 2, 3, 4 };
-            Console.WriteLine(String.Join(",", numbers));
-        }
         void Start()
         {
             //monster 1
@@ -104,18 +73,24 @@ namespace fighting_simulation
             Cory.attack = 25.0f;
             Cory.defense = 1.0f;
 
+            monsters = new Monster[] { Wompus, Mike, Kiki, Cory };
+
+
+
             ResetCurrentMonsters();
             
         }
 
-
+        /// <summary>
+        /// Resets the current fighters to be the first two monsters in the array
+        /// </summary>
         void ResetCurrentMonsters()
         {
             currentMonsterIndex = 0;
             //starting fighters set
-            currentMonster1 = GetMonster(currentMonsterIndex);
+            currentMonster1 = monsters[currentMonsterIndex];
             currentMonsterIndex++;
-            currentMonster2 = GetMonster(currentMonsterIndex);
+            currentMonster2 = monsters[currentMonsterIndex];
         }
 
 
@@ -306,24 +281,53 @@ namespace fighting_simulation
             //Monster 1 dying
             if (currentMonster1.health <= 0)
             {
-                //Monster swapping
-                currentMonsterIndex++;
-                currentMonster1 = GetMonster(currentMonsterIndex);
+                
+                    //Monster swapping
+                    currentMonsterIndex++;
+
+                if (TryEndSimulation())
+                {
+                    return;
+                }
+
+                    currentMonster1 = monsters[currentMonsterIndex];
+                
+                
             }
             //Monster 2 dying
             if (currentMonster2.health <= 0)
             {
-                //Monster swapping but for monster 2 specifically
-                currentMonsterIndex++;
-                currentMonster2 = GetMonster(currentMonsterIndex);
+                    //Monster swapping
+                    currentMonsterIndex++;
+
+                if (TryEndSimulation())
+                {
+                    return;
+                }
+                    currentMonster2 = monsters[currentMonsterIndex];
+                
+;
             }
             //When there is no more monsters to fight
-            if (currentMonster2.name == "None" || currentMonster2.name == "None" && currentMonsterIndex >= 4)
+            if (currentMonsterIndex >= monsters.Length || currentMonsterIndex + 1 > monsters.Length)
             {
                 // Shows restart menu
                 
                 currentScene = 2;
             }
+        }
+
+
+        bool TryEndSimulation()
+        {
+            bool simulationOver = currentMonsterIndex >= monsters.Length;
+
+            if (simulationOver)
+            {
+                currentScene = 2;
+            }
+
+            return simulationOver;
         }
 
         /// <summary>
